@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <div class="container" style="max-width: 800px;">
+    <h1 style="margin-top: 20px;">Admin Dashboard</h1>
+    
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px;">
+      <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--text-dim);">User Management</h2>
+      <div class="input-group" style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <input type="text" id="new-agent-name" placeholder="Agent Name" class="manual-input" style="flex: 1; font-size: 14px;">
+        <input type="email" id="new-agent-email" placeholder="Agent Email" class="manual-input" style="flex: 1; font-size: 14px;">
+        <input type="password" id="new-agent-pass" placeholder="Password" class="manual-input" style="flex: 1; font-size: 14px;">
+        <button class="btn-main" id="create-agent-btn" style="flex: 0.5; font-size: 14px; padding: 10px;">Create Agent</button>
+      </div>
+      <div id="adminMessage" class="percentage" style="color: var(--success); font-size: 14px;"></div>
+    </div>
+
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 300px;">
+        <div class="calendar-header">
+          <span>Select Days</span>
+          <button class="select-all-btn" id="admin-select-all">Select All</button>
+        </div>
+        <div class="calendar-grid" id="admin-calendar-grid"></div>
+      </div>
+      <div style="flex: 1; min-width: 300px;">
+        <div class="calendar-header">
+          <span>Select Agent</span>
+        </div>
+        <select id="agent-select" class="manual-input" style="width: 100%; margin-bottom: 20px; font-size: 14px; padding: 10px;">
+          <option value="all">All Team</option>
+        </select>
+        
+        <div class="button-container" style="flex-direction: column; gap: 10px; margin-top: 0;">
+          <button id="export-raw-btn" class="btn-main btn-secondary" style="font-size: 14px;">Export Raw Call Logs</button>
+          <button id="export-perf-btn" class="btn-main" style="font-size: 14px;">Export Performance Report</button>
+          <button id="logout-btn" class="btn-main btn-secondary" style="margin-top: 10px; font-size: 14px;">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="metrics-capture-area" style="min-width: 100%;">
+      <h2 style="text-align: center; color: white; margin-bottom: 20px; font-size: 24px;" id="dashboard-title">Team Performance</h2>
+      
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Payments / Calls</span>
+          <span id="admin-pay-perc" class="percentage">0.0%</span>
+        </div>
+        <div class="controls">
+          <span id="admin-pay-val" class="counter-val">0</span> / <span id="admin-calls-val" class="counter-val">0</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Full Payments / Calls</span>
+          <span id="admin-full-perc" class="percentage">0.0%</span>
+        </div>
+        <div class="controls">
+          <span id="admin-full-val" class="counter-val">0</span> / <span id="admin-calls-val2" class="counter-val">0</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Removed / In Collection</span>
+          <span id="admin-rem-perc" class="percentage">0.0%</span>
+        </div>
+        <div class="controls">
+          <span id="admin-rem-val" class="counter-val">0</span> / <span id="admin-coll-val" class="counter-val">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./src/admin.js"></script>
+</body>
+</html>

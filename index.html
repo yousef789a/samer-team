@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taha's Counter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  
+<div class="container">
+  <div class="signin-overlay" id="signinOverlay"></div>
+
+    <div class="calendar-wrapper" id="signIn">        
+      <div class="input-group" style="padding: 10px 10px 5px 10px;">
+        <input type="email"  id="email" placeholder="Email" class="manual-input" required style="width: 280px;">
+      </div>
+      <div class="input-group" style="padding: 5px 10px 0px 10px;">
+        <input type="password" id="password" placeholder="Password" class="manual-input" required style="width: 280px;">
+      </div>
+      <div class="button-container" style="width: 85%;padding-bottom:10px">
+        <button class="btn-main" id="submitSignIn">Sign In</button>
+        <button class="btn-main" id="submitSignUp" >Sign Up</button>
+      </div>
+      <p class="percentage">
+        <a href="#">Reset Password</a>
+      </p>
+      <div id="signInMessage" class="percentage" ></div>
+    </div>
+    <div class="calendar-wrapper" id="autoAux">        
+      <div class="input-group" style="padding: 10px 10px 5px 10px;">
+        <select id="auxDropdown" class="manual-input" style="width: 280px;">
+          <option value="Voice Channel Ready" class="manual-input">Ready</option>
+          <option value="Voice Channel Not Ready Break" class="manual-input">Break</option>
+          <option value="Voice Channel Not Ready Lunch" class="manual-input">Lunch</option>
+          <option value="Voice Channel Not Ready Training" class="manual-input">Training</option>
+          <option value="Voice Channel Not Ready Coaching" class="manual-input">Coaching</option>
+          <option value="Voice Channel Not Ready Call Backs" class="manual-input">Callbacks</option>
+          <option value="Voice Channel Not Ready End Of Shift Idle" class="manual-input">End Of Shift Idle</option>
+        </select>
+      </div>
+      <div class="input-group" style="padding: 5px 10px 0px 10px;">
+        <input type="number" id="minutes" placeholder="Minutes" class="manual-input" style="width: 100px;">
+        <input type="number" id="seconds" placeholder="Seconds" class="manual-input" style="width: 100px; margin-left: 10px;">
+      </div>
+      <div class="button-container" style="width: 50%;padding-bottom:10px">
+        <button class="btn-main" id="submitBtn">Copy</button>
+      </div>
+    </div>
+
+  <div class="lmaoaoa">
+<div class="left" id="left-panel">
+    <div class="metric-card" style="width: max-content; width: max-content; zoom: 75%;">
+      <div class="controls" id="ctrl-credits">
+        <input type="" id="accNum" class="manual-input" placeholder="Acc Num" style="width: 100px; margin-right: 15px;">
+      </div>
+      <div class="controls" id="ctrl-credits">
+        <input type="" id="seqNum" class="manual-input" placeholder="Seq Num" style="width: 100px; margin-right: 15px;">
+      </div>
+      <label class="checkbox-container">
+          <input class="custom-checkbox" id="chk-pay"  type="checkbox">
+          <span class="checkmark"></span>
+      </label> 
+      <span class="percentage">Pay</span>
+      <label class="checkbox-container">
+          <input class="custom-checkbox" id="chk-full"  type="checkbox">
+          <span class="checkmark"></span>
+      </label> 
+      <span class="percentage">Full</span>
+      <label class="checkbox-container">
+          <input class="custom-checkbox" id="chk-rem"  type="checkbox">
+          <span class="checkmark"></span>
+      </label> 
+      <span class="percentage">Rem</span>
+    </div>
+    <div class="metric-card" style="width: max-content; width: max-content; zoom: 75%; padding: 13px 20px;">
+      <div class="controls" id="ctrl-credits">
+        <input type="" id="ready-val" class="manual-input" value="0" style="width: 40px; ">
+        <span class="percentage" id="ready">Ready</span>
+      </div>
+      <div class="controls" id="ctrl-credits">
+        <input type="" id="in-val" class="manual-input" value="0" style="width: 40px;margin-left: 15px;">
+        <span class="percentage" id="In">In</span>
+      </div>
+      <div class="controls" id="ctrl-credits">
+        <input type="" id="call-len-val" class="manual-input" value="6.5" style="width: 40px;margin-left: 15px;">
+        <span class="percentage" id="ready">Call len.</span>
+      </div>
+      <div class="metric-info">
+        <span class="manual-input" id="est-avail" style="margin-left: 20px; margin-right: 18px;">00:00</span>
+      </div>
+    </div>
+  <div class="calendar-wrapper">
+
+    <div class="calendar-header">
+        <span>Select Days</span>
+        <button class="select-all-btn" >Select All</button>
+    </div>
+    <div class="calendar-grid" id="calendar-grid">
+    </div>
+<div class="calendar-wrapper" style="margin-top: 20px; min-height: 250px;">
+  <div class="calendar-header">
+    <span>Performance Trend</span>
+  </div>
+        <div class="chart-box">
+          <canvas id="performanceChart"></canvas>
+        </div>
+</div>
+  <div class="button-container">
+    <button id="copy-btn" class="btn-main">Screenshot</button>
+    <button id="data-pst" class="btn-main btn-secondary" >Paste Data</button>
+    <button id="loginPopUp" class="btn-main btn-secondary" >Login</button>
+  </div>
+
+  </div>
+</div>
+  <div id="metrics-capture-area">
+    <div class="btns">
+      <button style="right: 15px;" id="toggle-left-btn" onclick="toggleLeft()" title="Show/hide menu"></button>
+      <label id="colorPicker" style="left: 15px;" for="colorPickerInput" style="position: relative;">
+        🎨
+        <input 
+          id="colorPickerInput" 
+          type="color" 
+          style="position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; border-radius: 50%;"
+        >
+      </label>
+    </div>
+<div class="nameTitle ">
+    <input id="app-title" value="Taha's Counter" autocomplete="off" maxlength=""></input>
+    <svg xmlns="http://www.w3.org/2000/svg" class="editbtn" width="16" height="16" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+</div>
+    
+    <div class="status-bar">
+      <span class="current-view-label" id="view-label">Day 1</span>
+      <span id="last-updated">Last Updated: 00:00:00 ago</span>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-info">
+        <span class="label" style="display: none;">Call Volume</span>
+        <span class="percentage" style="color: var(--text-dim)">Calls</span>
+      </div>
+      <div class="controls" id="ctrl-calls">
+        <button class="btn-circle" onclick="change('calls', -1)">-</button>
+        <span id="calls-val" class="counter-val">0</span>
+        <button class="btn-circle" onclick="change('calls', 1)">+</button>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-info">
+        <p id="payArrow" class="arrow"> &#x25BE;</p>
+        <span class="label">Payments <span id="pay-tier" class="tier-badge" style="visibility :hidden">T1</span></span>
+        <span id="pay-perc" class="percentage">0.0%</span>
+      </div>
+      <div class="controls" id="ctrl-pay">
+        <button class="btn-circle" onclick="change('pay', -1)">-</button>
+        <span id="pay-val" class="counter-val">0</span>
+        <button class="btn-circle" onclick="change('pay', 1)">+</button>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-info">
+        <p id="fullArrow" class="arrow"> &#x25BE;</p>
+        <span class="label">Full Balance <span id="full-tier" class="tier-badge" style="visibility :hidden">T1</span></span>
+        <span id="full-perc" class="percentage">0.0%</span>
+      </div>
+      <div class="controls" id="ctrl-full">
+        <button class="btn-circle" onclick="change('full', -1)">-</button>
+        <span id="full-val" class="counter-val">0</span>
+        <button class="btn-circle" onclick="change('full', 1)">+</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="metric-card">
+      <div class="metric-info">
+        <span class="label" style="display: none;">In Collection Post.</span>
+        <span class="percentage" style="color: var(--text-dim)">In Collection Post.</span>
+      </div>
+      <div class="controls" id="ctrl-coll">
+        <button class="btn-circle" onclick="change('coll', -1)">-</button>
+        <span id="coll-val" class="counter-val">0</span>
+        <button class="btn-circle" onclick="change('coll', 1)">+</button>
+      </div>
+    </div>
+
+    <div class="metric-card" style="display:none; visibility: hidden;">
+      <div class="metric-info" style="display:none; visibility: hidden;">
+        <span class="label" style="display:none; visibility: hidden;">Removed Coll. <span id="rem-tier" class="tier-badge" style="display:none; visibility: hidden;">T1</span></span>
+        <span id="rem-perc" class="percentage" style="display:none; visibility: hidden;">0.0%</span>
+        <span class="percentage" style="color: var(--text-dim);display:none; visibility: hidden; ">Removed Coll.</span>
+      </div>
+      <div class="controls" id="ctrl-rem" style="display:none; visibility: hidden;">
+        <button class="btn-circle" onclick="change('rem', -1)">-</button>
+        <span id="rem-val" class="counter-val">0</span>
+        <button class="btn-circle" onclick="change('rem', 1)">+</button>
+      </div>
+
+    </div>
+    <div class="metric-card">
+      <div class="metric-info">
+        <p id="postArrow" class="arrow"> &#x25BE;</p>
+        <span class="label">Removed Post. <span id="post-tier" class="tier-badge" style="visibility :hidden">T1</span></span>
+        <span id="post-perc" class="percentage">0.0%</span>
+      </div>
+      <div class="controls" id="ctrl-post">
+        <button class="btn-circle" onclick="change('post', -1)">-</button>
+        <span id="post-val" class="counter-val">0</span>
+        <button class="btn-circle" onclick="change('post', 1)">+</button>
+      </div>
+
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-info">
+        <span class="label" style="display: none;">Credits Applied</span>
+        <span class="percentage" id="cred-perc">Credits Applied</span>
+      </div>
+      <div class="controls" id="ctrl-credits">
+        <button class="btn-circle" onclick="change('credits', -50)">-</button>
+        <input type="" id="credits-val" class="manual-input" value="0">
+        <button class="btn-circle" onclick="change('credits', 50)">+</button>
+      </div>
+    </div>
+
+    <div class="metric-card lmao">
+      <div class="metric-info">
+        <span class="label" style="display: none;">Auto Pay</span>
+        <span class="percentage" style="color: var(--text-dim)">Auto Pay</span>
+        <div class="controls" id="ctrl-ap">
+            <button class="btn-circle" onclick="change('ap', -1)">-</button>
+            <span id="ap-val" class="counter-val">0</span>
+            <span id="ap-val-mon" style="color: var(--success);"  class="percentage">0</span>
+            <button class="btn-circle" onclick="change('ap', 1)">+</button>
+        </div>
+      </div>
+      <div class="metric-info">
+        <span class="label" style="display: none;">Payment P.</span>
+        <span class="percentage" style="color: var(--text-dim)">Payment P.</span>
+        <div class="controls" id="ctrl-pp">
+            <button class="btn-circle" onclick="change('pp', -1)">-</button>
+            <span id="pp-val" class="counter-val">0</span>
+            <span id="pp-val-mon" style="color: var(--success);" class="percentage">0</span>
+            <button class="btn-circle" onclick="change('pp', 1)">+</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  </div>
+
+<div class="credits" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    Made by :3
+</div>
+
+<script type="module" src="./src/main.js"></script>
+
+</body>
+</html>
+
