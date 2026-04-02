@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <div class="container" style="max-width: 1000px;">
+    <h1 style="margin-top: 20px;">Admin Dashboard</h1>
+    
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px;">
+      <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--text-dim);">User Management</h2>
+      <div class="input-group" style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+        <input type="text" id="new-agent-name" placeholder="Name" class="manual-input" style="flex: 1; min-width: 120px; font-size: 14px;">
+        <input type="email" id="new-agent-email" placeholder="Email" class="manual-input" style="flex: 1; min-width: 150px; font-size: 14px;">
+        <input type="password" id="new-agent-pass" placeholder="Password" class="manual-input" style="flex: 1; min-width: 120px; font-size: 14px;">
+        <select id="new-agent-role" class="manual-input" style="flex: 0.5; min-width: 120px; font-size: 14px;">
+          <option value="agent">Agent</option>
+          <option value="supervisor">Supervisor</option>
+        </select>
+        <select id="new-agent-supervisor" class="manual-input" style="flex: 0.5; min-width: 120px; font-size: 14px;">
+          <option value="">No Supervisor</option>
+        </select>
+        <button class="btn-main" id="create-agent-btn" style="flex: 0.5; min-width: 120px; font-size: 14px; padding: 10px;">Create User</button>
+      </div>
+      <div id="adminMessage" class="percentage" style="color: var(--success); font-size: 14px;"></div>
+    </div>
+
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px;">
+      <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--text-dim);">Team Organization (Drag & Drop)</h2>
+      <div class="kanban-board" id="kanban-board">
+        <!-- Columns will be injected here by JS -->
+      </div>
+    </div>
+
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px;">
+      <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--text-dim);">User Directory</h2>
+      <div style="overflow-x: auto;">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body">
+            <!-- Rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px;">
+      <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--text-dim);">Announcements</h2>
+      <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+          <textarea id="announcement-text" class="manual-input" style="width: 100%; height: 80px; resize: none; margin-bottom: 10px; font-size: 14px;" placeholder="Type announcement here..."></textarea>
+          <div class="hierarchy-container" id="announcement-hierarchy" style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);">
+            <!-- Injected by JS -->
+          </div>
+          <button class="btn-main" id="post-announcement-btn" style="width: 100%; font-size: 14px;">Pin Announcement</button>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+          <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--text-dim);">Active Announcements</h3>
+          <div id="active-announcements-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calendar-wrapper" style="max-width: 100%; margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 300px;">
+        <div class="calendar-header">
+          <span>Select Days</span>
+          <button class="select-all-btn" id="admin-select-all">Select All</button>
+        </div>
+        <div class="calendar-grid" id="admin-calendar-grid"></div>
+      </div>
+      <div style="flex: 1; min-width: 300px;">
+        <div class="calendar-header">
+          <span>Select Agent / Team</span>
+        </div>
+        <select id="agent-select" class="manual-input" style="width: 100%; margin-bottom: 20px; font-size: 14px; padding: 10px; background-color: rgba(255,255,255,0.05);">
+          <option value="all">All Team</option>
+          <!-- Optgroups injected by JS -->
+        </select>
+        
+        <div class="button-container" style="flex-direction: column; gap: 10px; margin-top: 0;">
+          <button id="export-raw-btn" class="btn-main btn-secondary" style="font-size: 14px;">Export Raw Call Logs</button>
+          <button id="export-perf-btn" class="btn-main" style="font-size: 14px;">Export Performance Report</button>
+          <button id="logout-btn" class="btn-main btn-secondary" style="margin-top: 10px; font-size: 14px;">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="metrics-capture-area" style="min-width: 100%;">
+      <h2 style="text-align: center; color: white; margin-bottom: 20px; font-size: 24px;" id="dashboard-title">Team Performance</h2>
+      
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Payments / Calls</span>
+          <span id="admin-pay-perc" class="percentage">0.0%</span>
+        </div>
+        <div class="controls">
+          <span id="admin-pay-val" class="counter-val">0</span> / <span id="admin-calls-val" class="counter-val">0</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Full Payments / Calls</span>
+          <span id="admin-full-perc" class="percentage">0.0%</span>
+        </div>
+        <div class="controls">
+          <span id="admin-full-val" class="counter-val">0</span> / <span id="admin-calls-val2" class="counter-val">0</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Removed / In Collection</span>
+          <span id="admin-rem-perc" class="percentage">0.0%</span>
+        </div>
+        <div class="controls">
+          <span id="admin-rem-val" class="counter-val">0</span> / <span id="admin-coll-val" class="counter-val">0</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Auto Pay</span>
+          <span id="admin-ap-perc" class="percentage" style="color: var(--success);">0.0$</span>
+        </div>
+        <div class="controls">
+          <span id="admin-ap-val" class="counter-val">0</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-info">
+          <span class="label">Payment Plans</span>
+          <span id="admin-pp-perc" class="percentage" style="color: var(--success);">0.0$</span>
+        </div>
+        <div class="controls">
+          <span id="admin-pp-val" class="counter-val">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-content">
+      <div class="modal-title">Edit User</div>
+      <input type="hidden" id="edit-user-id">
+      <div class="input-group" style="margin-bottom: 10px;">
+        <label style="font-size: 12px; color: var(--text-dim);">Name</label>
+        <input type="text" id="edit-user-name" class="manual-input" style="width: 100%; font-size: 14px; margin-top: 5px;">
+      </div>
+      <div class="input-group" style="margin-bottom: 10px;">
+        <label style="font-size: 12px; color: var(--text-dim);">Email</label>
+        <input type="email" id="edit-user-email" class="manual-input" style="width: 100%; font-size: 14px; margin-top: 5px;">
+      </div>
+      <div class="input-group" style="margin-bottom: 20px;">
+        <label style="font-size: 12px; color: var(--text-dim);">Password</label>
+        <input type="text" id="edit-user-pass" class="manual-input" style="width: 100%; font-size: 14px; margin-top: 5px;">
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-main" id="save-edit-btn">Save Changes</button>
+        <button class="btn-main btn-secondary" id="cancel-edit-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/admin.js"></script>
+</body>
+</html>
